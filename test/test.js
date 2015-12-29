@@ -97,12 +97,6 @@ test('.groper() throw error when supply invalid arguents', t => {
         options = {},
         callback = (error, data) => {};
     t.throws(() => { domainInfo.groper(domain, callback) }, 'Expected a `domain`');
-
-    domain = 'example.com';
-    t.throws(() => { domainInfo.groper(domain, [], options, callback) }, 'Valid No `DNS TYPE` exitst');
-
-    options = { type: null }
-    t.throws(() => { domainInfo.groper(domain, null, options, callback) }, 'Expected a `types is Array`');
 });
 
 test('.reverse() return promise when without callback function.', t => {
@@ -144,7 +138,6 @@ test('.whois() return promise when without callback function.', t => {
         t.true(typeof data === 'string');
     });
 });
-
 
 test.cb('.whois() return domain information', t => {
     const domain = 'example.com',
