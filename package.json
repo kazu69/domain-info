@@ -1,0 +1,24 @@
+{
+  "name": "domain-info",
+  "version": "0.0.1",
+  "description": "Simple domain information tool",
+  "main": "index.js",
+  "dependencies": {
+    "async": "^1.5.0",
+    "es6-promise": "^3.0.2",
+    "native-dns": "^0.7.0",
+    "net": "^1.0.2",
+    "tldjs": "^1.6.2"
+  },
+  "devDependencies": {
+    "ava": "^0.8.0",
+    "eslint": "^1.10.3",
+    "nyc": "^5.0.1"
+  },
+  "scripts": {
+    "lint": "eslint **/*.js",
+    "test": "./node_modules/.bin/nyc ava"
+  },
+  "author": "kazu69",
+  "license": "MIT"
+}
