@@ -1,5 +1,7 @@
 # domain-info
 
+[![Build Status](https://travis-ci.org/kazu69/domain-info.svg?branch=master)](https://travis-ci.org/kazu69/domain-info)
+
 Simple domain infomation client.
 
 ## install
