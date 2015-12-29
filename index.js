@@ -5,7 +5,8 @@ const dns = require('native-dns'),
       Promise = require('es6-promise').Promise,
       tldjs = require('tldjs'),
       punycode = require('punycode'),
-      async = require('async');
+      async = require('async'),
+      objectAssign = require('object-assign');
 
 const dnsTypes = [
   'A',
@@ -35,11 +36,12 @@ const ipMatcher = /^(?:(?:2[0-4]\d|25[0-5]|1\d{2}|[1-9]?\d)\.){3}(?:2[0-4]\d|25[
  * @param {Object} opts
  * @returns {Number} timeout
  */
-function requestDns(domain, type, server, timeout) {
+function requestDns(domain, type, option, timeout) {
     if(!type) type = 'A';
-    if(!server) server = '8.8.8.8';
 
-    let types = []
+    let types = [],
+        server = { address: '8.8.8.8', port: 53, type: 'tcp' };
+
     if(typeof type === 'string') types.push(type);
     if(type.length) types = type;
 
@@ -50,12 +52,16 @@ function requestDns(domain, type, server, timeout) {
                 type: type
             };
 
-            const request = dns.Request({
+            let requestOption = {
                 question: dns.Question(question_opts),
-                server: server,
-                timeout: timeout,
+                server: objectAssign(server, option),
+                timeout: 1000,
                 cache: false
-            });
+            };
+
+            if(timeout) requestOption.timeout = timeout;
+
+            const request = dns.Request(requestOption);
 
             request.on('timeout', () => {
                 callback(new Error('DNS request timed out'), null);
@@ -246,22 +252,23 @@ function encodePuny(unicode) {
 }
 
 module.exports.groper = (domain, types, opts, cb) => {
-    if (typeof domain !== 'string') {
-        throw new Error('Expected a `domain`');
-    }
+    if (typeof domain !== 'string') throw new Error('Expected a `domain`');
 
     if(typeof types === 'function') cb = types;
-    if(typeof opts === 'function') cb = opts;
+    if(typeof opts === 'function') {
+        cb = opts;
+        opts = types;
+    }
 
     const domainName = encodePuny(domain);
     let type, resourceTypes, server, timeout;
 
     if(typeof types === 'string' && types !== 'ANY') {
         resourceTypes = [types];
-    } else if(typeof types === 'undefined' || typeof types === 'function') {
-        resourceTypes = ['A']
-    } else {
+    } else if(Array.isArray(types) || types === 'ANY') {
         resourceTypes = types;
+    } else {
+        resourceTypes = ['A'];
     }
 
     type = validateDnsType(resourceTypes);

@@ -1,6 +1,6 @@
 {
   "name": "domain-info",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Simple domain information tool",
   "main": "index.js",
   "repository": "kazu69/domain-info",
@@ -10,6 +10,7 @@
     "es6-promise": "^3.0.2",
     "native-dns": "^0.7.0",
     "net": "^1.0.2",
+    "object-assign": "^4.0.1",
     "tldjs": "^1.6.2"
   },
   "devDependencies": {
