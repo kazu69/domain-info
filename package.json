@@ -3,6 +3,8 @@
   "version": "0.0.1",
   "description": "Simple domain information tool",
   "main": "index.js",
+  "repository": "kazu69/domain-info",
+  "homepage": "https://github.com/kazu69/domain-info",
   "dependencies": {
     "async": "^1.5.0",
     "es6-promise": "^3.0.2",
