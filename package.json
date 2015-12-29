@@ -1,6 +1,6 @@
 {
   "name": "domain-info",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Simple domain information tool",
   "main": "index.js",
   "repository": "kazu69/domain-info",
