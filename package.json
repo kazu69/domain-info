@@ -1,6 +1,15 @@
 {
   "name": "domain-info",
-  "version": "0.0.2",
+  "version": "0.0.3",
+  "keywords": [
+    "domain",
+    "dns",
+    "dig",
+    "whois",
+    "client",
+    "punycode",
+    "promise"
+  ],
   "description": "Simple domain information tool",
   "main": "index.js",
   "repository": "kazu69/domain-info",
