@@ -103,6 +103,10 @@ domain.punycode('xn--wgv71a119e.jp');
 // => 日本語.jp
 ```
 
+## Related
+
+[domain-info-cli](https://www.npmjs.com/package/domain-info-cli)
+
 ## License
 
 MIT © kazu69
