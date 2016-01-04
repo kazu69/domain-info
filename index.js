@@ -161,7 +161,8 @@ function requestWhois(domain, options) {
  * @param {String} domain
  */
 function getWhoisServer(domain) {
-    const tld = tldjs.getPublicSuffix(domain),
+    const tmp = domain.split('.'),
+          tld = tmp[tmp.length -1],
           cname = tld + '.whois-servers.net',
           messege = { not_found: 'Whois Server `NOT FOUND`' };
 
