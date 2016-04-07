@@ -264,12 +264,11 @@ module.exports.groper = (domain, types, opts, cb) => {
     const domainName = encodePuny(domain);
     let type, resourceTypes, server, timeout;
 
-    if(typeof types === 'string' && types !== 'ANY') {
-        resourceTypes = [types];
-    } else if(Array.isArray(types) || types === 'ANY') {
-        resourceTypes = types;
-    } else {
-        resourceTypes = ['A'];
+    if(typeof types === 'string') { resourceTypes = [types]; }
+    if(Array.isArray(types)) { resourceTypes = types; }
+
+    if(resourceTypes.indexOf('ANY') >= 0) {
+        resourceTypes = 'ANY';
     }
 
     type = validateDnsType(resourceTypes);
