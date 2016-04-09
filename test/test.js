@@ -58,7 +58,7 @@ test.cb('.groper() types has ANY returns all types', t => {
             port: 53,
             type: 'udp'
         },
-        types = ['A', 'NS', 'MX', 'ANY'],
+        types = ['ANY', 'NS', 'MX'],
         domain = 'example.com',
         timeout = 3000;
 
@@ -68,11 +68,18 @@ test.cb('.groper() types has ANY returns all types', t => {
     }
 
     const callback = (error, data) => {
-        keys = Object.keys(data);
-
-        ['A', 'AAAA', 'NS', 'CNAME', 'PTR', 'NAPTR', 'TXT', 'MX', 'SRV', 'SOA', 'TLSA'].foreach((val) => {
-            t.true(ketys.indexOf(val) !== -1);
-        });
+        t.true(!!data.A);
+        t.true(!!data.AAAA);
+        t.true(!!data.NS);
+        t.true(!!data.CNAME);
+        t.true(!!data.PTR);
+        t.true(!!data.NAPTR);
+        t.true(!!data.TXT);
+        t.true(!!data.MX);
+        t.true(!!data.SRV);
+        t.true(!!data.SOA);
+        t.true(!!data.TLSA);
+        t.end();
     }
 
     domainInfo.groper(domain, types, options, callback);
