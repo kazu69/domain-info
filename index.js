@@ -40,7 +40,7 @@ function requestDns(domain, type, option, timeout) {
     if(!type) type = 'A';
 
     let types = [],
-        server = { address: '8.8.8.8', port: 53, type: 'tcp' };
+        server = { address: '8.8.8.8', port: 53, type: 'udp' };
 
     if(typeof type === 'string') types.push(type);
     if(type.length) types = type;
@@ -55,14 +55,13 @@ function requestDns(domain, type, option, timeout) {
             let requestOption = {
                 question: dns.Question(question_opts),
                 server: objectAssign(server, option),
-                timeout: 1000,
+                timeout: 2000,
                 cache: false
             };
 
             if(timeout) requestOption.timeout = timeout;
 
             const request = dns.Request(requestOption);
-
             request.on('timeout', () => {
                 callback(new Error('DNS request timed out'), null);
             });
@@ -85,6 +84,7 @@ function requestDns(domain, type, option, timeout) {
 
                 Object.keys(results).map((value, index) => {
                     let key = types[index];
+
                     response[key] = results[value];
                 });
 
@@ -264,12 +264,11 @@ module.exports.groper = (domain, types, opts, cb) => {
     const domainName = encodePuny(domain);
     let type, resourceTypes, server, timeout;
 
-    if(typeof types === 'string' && types !== 'ANY') {
-        resourceTypes = [types];
-    } else if(Array.isArray(types) || types === 'ANY') {
-        resourceTypes = types;
-    } else {
-        resourceTypes = ['A'];
+    if(typeof types === 'string') { resourceTypes = [types]; }
+    if(Array.isArray(types)) { resourceTypes = types; }
+
+    if(resourceTypes.indexOf('ANY') >= 0) {
+        resourceTypes = 'ANY';
     }
 
     type = validateDnsType(resourceTypes);

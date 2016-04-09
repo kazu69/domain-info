@@ -52,6 +52,39 @@ test.cb('.groper() return domain resource record.', t => {
     domainInfo.groper(domain, types, options, callback);
 });
 
+test.cb('.groper() types has ANY returns all types', t => {
+    const server = {
+            address: '8.8.8.8',
+            port: 53,
+            type: 'udp'
+        },
+        types = ['ANY', 'NS', 'MX'],
+        domain = 'example.com',
+        timeout = 3000;
+
+    const options = {
+        server: server,
+        timeout: timeout
+    }
+
+    const callback = (error, data) => {
+        t.true(!!data.A);
+        t.true(!!data.AAAA);
+        t.true(!!data.NS);
+        t.true(!!data.CNAME);
+        t.true(!!data.PTR);
+        t.true(!!data.NAPTR);
+        t.true(!!data.TXT);
+        t.true(!!data.MX);
+        t.true(!!data.SRV);
+        t.true(!!data.SOA);
+        t.true(!!data.TLSA);
+        t.end();
+    }
+
+    domainInfo.groper(domain, types, options, callback);
+});
+
 test('.groper() enable encode punycode domain', t => {
     const domain = '日本語.jp',
           type = 'A';
