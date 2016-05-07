@@ -3,25 +3,38 @@
 const test = require('ava');
 const domainInfo = require('../index');
 
-test('.groper() return promise when without callback function.', t => {
-    let domain = 'example.com',
-        type = 'A' ,
-        promise = domainInfo.groper(domain, type);
+test.cb('.groper() return promise when without callback function.', t => {
+    const domain = 'example.com',
+        type = 'A',
+        server = {
+            address: '8.8.8.8',
+            port: 53,
+            type: 'tcp'
+        },
+        timeout = 3000,
+        options = {
+            server: server,
+            timeout: timeout
+        };
 
-    return promise.then(data => {
+    const promise = domainInfo.groper(domain, type, options);
+    promise.then(data => {
         var record = data.A.find(elem => {
             if(elem.address) return elem;
         });
-
          t.is(record.address, '93.184.216.34');
+         t.end();
+    }).catch( () => {
+        t.pass();
+        t.end();
     });
 });
 
-test.cb('.groper() return domain resource record.', t => {
+test('.groper() return domain resource record.', t => {
     const server = {
             address: '8.8.8.8',
             port: 53,
-            type: 'udp'
+            type: 'tcp'
         },
         types = ['A', 'NS', 'MX'],
         domain = 'example.com',
@@ -44,23 +57,23 @@ test.cb('.groper() return domain resource record.', t => {
         var ns = data.NS.find(elem => {
             if(elem.data) return elem;
         });
+
         t.true(ns.data.indexOf('iana-servers.net') !== -1);
         t.is(error, null);
-        t.end();
     }
 
     domainInfo.groper(domain, types, options, callback);
 });
 
-test.cb('.groper() types has ANY returns all types', t => {
+test('.groper() types has ANY returns all types', t => {
     const server = {
             address: '8.8.8.8',
             port: 53,
-            type: 'udp'
+            type: 'tcp'
         },
         types = ['ANY', 'NS', 'MX'],
         domain = 'example.com',
-        timeout = 3000;
+        timeout = 5000;
 
     const options = {
         server: server,
@@ -79,7 +92,6 @@ test.cb('.groper() types has ANY returns all types', t => {
         t.true(!!data.SRV);
         t.true(!!data.SOA);
         t.true(!!data.TLSA);
-        t.end();
     }
 
     domainInfo.groper(domain, types, options, callback);
@@ -90,13 +102,11 @@ test('.groper() enable encode punycode domain', t => {
           type = 'A';
 
     const callback = (error, data) => {
-
         var record = data.A.find(elem => {
             if(elem) return elem;
         });
         t.is(ecord.name, 'xn--wgv71a119e.jp');
         t.is(record.address, '117.104.133.167');
-
         t.is(error, null);
     }
 
@@ -105,13 +115,13 @@ test('.groper() enable encode punycode domain', t => {
 
 test('.groper() return error with message.', t => {
     const server = {
-            address: '0.0.0.0',
+            address: '8.8.8.8',
             port: 53,
-            type: 'udp'
+            type: 'tcp'
         },
         types = ['A', 'CNAME', 'MX'],
         domain = 'example.com',
-        timeout = 3000;
+        timeout = 1;
 
     const options = {
         server: server,
@@ -119,7 +129,10 @@ test('.groper() return error with message.', t => {
     }
 
     const callback = (error, data) => {
-        t.is(error[0], 'Error: DNS request timed out');
+        t.is(data, null);
+        t.is(error.name, "Error");
+        t.is(error.stack.split(/\n/, 1)[0], 'Error: DNS request timed out');
+        t.pass();
     }
 
     domainInfo.groper(domain, types, options, callback);
@@ -137,14 +150,14 @@ test('.reverse() return promise when without callback function.', t => {
         promise = domainInfo.reverse(ip);
 
     return promise.then(hostname => {
-        t.same(hostname, ['google-public-dns-a.google.com']);
+        t.deepEqual(hostname, ['google-public-dns-a.google.com']);
     });
 });
 
 test.cb('.reverse() return hostname.', t => {
     const ip = '8.8.8.8',
         callback = (error, data) => {
-            t.same(data, ['google-public-dns-a.google.com']);
+            t.deepEqual(data, ['google-public-dns-a.google.com']);
             t.end();
         };
 
