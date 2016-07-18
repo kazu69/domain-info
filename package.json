@@ -15,7 +15,7 @@
   "repository": "kazu69/domain-info",
   "homepage": "https://github.com/kazu69/domain-info",
   "dependencies": {
-    "async": "^1.5.2",
+    "async": "^2.0.0",
     "es6-promise": "^3.1.2",
     "native-dns": "^0.7.0",
     "net": "^1.0.2",
@@ -24,8 +24,8 @@
   },
   "devDependencies": {
     "ava": "git://github.com/sindresorhus/ava.git",
-    "eslint": "^2.2.0",
-    "nyc": "^6.0.0"
+    "eslint": "^3.1.0",
+    "nyc": "^7.0.0"
   },
   "scripts": {
     "lint": "eslint **/*.js",
