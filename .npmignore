@@ -1,0 +1,6 @@
+.nyc_output
+example.js
+node_modules/
+.travis.yml
+.git
+.gitignore
