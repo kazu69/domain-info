@@ -16,7 +16,7 @@
   "homepage": "https://github.com/kazu69/domain-info",
   "dependencies": {
     "async": "^2.0.0",
-    "es6-promise": "^3.1.2",
+    "es6-promise": "^4.0.5",
     "native-dns": "^0.7.0",
     "net": "^1.0.2",
     "object-assign": "^4.0.1",
