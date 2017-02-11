@@ -1,7 +1,14 @@
 language: node_js
 node_js:
+  - '7'
   - '6'
   - '5'
   - '4'
-before_install:
-  - 'npm i -g npm@latest'
+install:
+  - npm install -g yarn
+  - yarn install --pure-lockfile
+  - yarn check --integrity
+cache:
+  yarn: true
+  directories:
+    - node_modules
