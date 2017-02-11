@@ -8,9 +8,7 @@ install:
   - npm install -g yarn
   - yarn install --pure-lockfile
   - yarn check --integrity
-before_install:
-  - 'npm i -g npm@latest'
-cache: yarn
+cache:
   yarn: true
   directories:
     - node_modules
