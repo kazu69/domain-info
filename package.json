@@ -29,8 +29,7 @@
   },
   "scripts": {
     "lint": "eslint **/*.js",
-    "test": "$(npm bin)/ava test/test.js -T 10s -v",
-    "coverage": "$(npm bin)/nyc ava"
+    "test": "nyc ava test/*.js"
   },
   "author": "kazu69",
   "license": "MIT"

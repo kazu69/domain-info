@@ -4,3 +4,5 @@ node_modules/
 .travis.yml
 .git
 .gitignore
+coverage
+.nyc_output/
