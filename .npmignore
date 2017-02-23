@@ -1,8 +1,9 @@
+node_modules/
+.nyc_output/
+.github/
 .nyc_output
 example.js
-node_modules/
 .travis.yml
 .git
 .gitignore
 coverage
-.nyc_output/
