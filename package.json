@@ -24,7 +24,7 @@
   },
   "devDependencies": {
     "ava": "git://github.com/sindresorhus/ava.git",
-    "eslint": "^3.16.1",
+    "eslint": "^3.18.0",
     "nyc": "^10.1.2"
   },
   "scripts": {
