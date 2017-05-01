@@ -55,15 +55,16 @@ Option is [node-dns](https://github.com/tjfontaine/node-dns#request) Request met
 
 ```js
 const domain = require('domain-info');
-domain.groper(
-    'example.com',
-    {
-        type: ['A', 'NS', 'MX'],
-        server: { address: '8.8.8.8', port: 53, type: 'udp' },
-        timeout: 1000
-    },
-    callback
-);
+
+// Build out your lookups and options
+var type = ['A', 'NS', 'MX']
+var options = {
+    server: { address: '8.8.8.8', port: 53, type: 'udp' },
+    timeout: 1000
+    }
+
+// Pass them into the groper method
+domain.groper('example.com', type, options, callback);
 ```
 
 ### reverse(ip_address, [callback])
