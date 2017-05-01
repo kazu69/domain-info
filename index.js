@@ -329,6 +329,31 @@ module.exports.whois = (domain, opts, cb) => {
     }
 }
 
+module.exports.exactWhois = (domain, opts, cb) => {
+    if (typeof domain !== 'string') {
+        throw new Error('Expected a `domain`');
+    }
+
+    if(typeof opts === 'function') cb = opts;
+
+    if(tldjs.tldExists(domain) === false) {
+        throw new Error('Invalid a `domain name`');
+    }
+    
+    // Pre-pending lookups with 'domain ' result in exact searches
+    // When this is not done your results will be for the domain you want and many spam domains as well
+    const encodedDomain = 'domain ' + encodePuny(domain),
+          promise = requestWhois(encodedDomain, opts);
+
+    if(cb && typeof cb === 'function') {
+        promise
+            .then(data => cb(null, data))
+            .catch(error => cb(error, null));
+    } else {
+        return promise;
+    }
+}
+
 module.exports.punycode = (domain_or_string) => {
     const type = domain_or_string.match(/^xn--/)? 'decode' : 'encode';
     if(type === 'decode') {
