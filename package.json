@@ -15,7 +15,7 @@
   "repository": "kazu69/domain-info",
   "homepage": "https://github.com/kazu69/domain-info",
   "dependencies": {
-    "async": "^2.1.5",
+    "async": "^2.4.1",
     "es6-promise": "^4.0.5",
     "native-dns": "^0.7.0",
     "net": "^1.0.2",
