@@ -57,8 +57,8 @@ Option is [node-dns](https://github.com/tjfontaine/node-dns#request) Request met
 const domain = require('domain-info');
 domain.groper(
     'example.com',
+    ['A', 'NS', 'MX'],
     {
-        type: ['A', 'NS', 'MX'],
         server: { address: '8.8.8.8', port: 53, type: 'udp' },
         timeout: 1000
     },
@@ -79,9 +79,17 @@ domain.reverse('8.8.8.8', (error, data) => {
 
 ### whois(domain, [option, callback])
 Whois command.
-Option has ```server``` and ```port``` properties.
+Option has `server`, `port`, `recordType` properties.
+server has default value `TLD.whois-servers.net`.
+port has default value `43`
+recordType has default value `domain`
 
 ```js
+const options = {
+    server: 'com.whois-servers.net',
+    port: 43,
+    recordType: 'domain'
+}
 const domain = require('domain-info');
 domain.whois('example.com', (error, data) => {
     // data has whois results.
