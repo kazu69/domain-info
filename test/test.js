@@ -30,7 +30,7 @@ test.cb('.groper() return promise when without callback function.', t => {
     });
 });
 
-test('.groper() return domain resource record.', t => {
+test.cb('.groper() return domain resource record.', t => {
     const server = {
             address: '8.8.8.8',
             port: 53,
@@ -60,12 +60,13 @@ test('.groper() return domain resource record.', t => {
 
         t.true(ns.data.indexOf('iana-servers.net') !== -1);
         t.is(error, null);
+        t.end();
     }
 
-    domainInfo.groper(domain, types, options, callback);
+    return domainInfo.groper(domain, types, options, callback);
 });
 
-test('.groper() types has ANY returns all types', t => {
+test.cb('.groper() types has ANY returns all types', t => {
     const server = {
             address: '8.8.8.8',
             port: 53,
@@ -92,12 +93,13 @@ test('.groper() types has ANY returns all types', t => {
         t.true(!!data.SRV);
         t.true(!!data.SOA);
         t.true(!!data.TLSA);
+        t.end();
     }
 
-    domainInfo.groper(domain, types, options, callback);
+    return domainInfo.groper(domain, types, options, callback);
 });
 
-test('.groper() enable encode punycode domain', t => {
+test.cb('.groper() enable encode punycode domain', t => {
     const domain = '日本語.jp',
           type = 'A';
 
@@ -105,15 +107,16 @@ test('.groper() enable encode punycode domain', t => {
         var record = data.A.find(elem => {
             if(elem) return elem;
         });
-        t.is(ecord.name, 'xn--wgv71a119e.jp');
+        t.is(record.name, 'xn--wgv71a119e.jp');
         t.is(record.address, '117.104.133.167');
         t.is(error, null);
+        t.end();
     }
 
-    domainInfo.groper(domain, type, callback);
+    return domainInfo.groper(domain, type, callback);
 });
 
-test('.groper() return error with message.', t => {
+test.cb('.groper() return error with message.', t => {
     const server = {
             address: '8.8.8.8',
             port: 53,
@@ -132,25 +135,27 @@ test('.groper() return error with message.', t => {
         t.is(data, null);
         t.is(error.name, "Error");
         t.is(error.stack.split(/\n/, 1)[0], 'Error: DNS request timed out');
-        t.pass();
+        t.end();
     }
 
-    domainInfo.groper(domain, types, options, callback);
+    return domainInfo.groper(domain, types, options, callback);
 });
 
 test('.groper() throw error when supply invalid arguents', t => {
     let domain = null,
         options = {},
         callback = (error, data) => {};
+
     t.throws(() => { domainInfo.groper(domain, callback) }, 'Expected a `domain`');
 });
 
-test('.reverse() return promise when without callback function.', t => {
+test.cb('.reverse() return promise when without callback function.', t => {
     const ip = '8.8.8.8',
-        promise = domainInfo.reverse(ip);
+          promise = domainInfo.reverse(ip);
 
-    return promise.then(hostname => {
+    promise.then(hostname => {
         t.deepEqual(hostname, ['google-public-dns-a.google.com']);
+        t.end();
     });
 });
 
@@ -161,7 +166,7 @@ test.cb('.reverse() return hostname.', t => {
             t.end();
         };
 
-    domainInfo.reverse(ip, callback);
+    return domainInfo.reverse(ip, callback);
 });
 
 test('.reverse() throw error when supply invalid arguents', t => {
@@ -169,25 +174,28 @@ test('.reverse() throw error when supply invalid arguents', t => {
     t.throws(() => { domainInfo.reverse(ip) }, 'Expected a `ip address`');
 });
 
-test('.whois() return promise when without callback function.', t => {
-    const domain = 'example.com',
+test.cb('.whois() return promise when without callback function.', t => {
+    const domain = 'google-public-dns-a.google.com',
         options = {
+            recordType: 'nameserver',
             server: 'whois.verisign-grs.com',
             port: 43
         },
         promise = domainInfo.whois(domain, options);
 
-    return promise.then(data => {
+    promise.then(data => {
         t.not(data, null);
         t.not(data, undefined);
         t.not(data, '');
         t.true(typeof data === 'string');
+        t.end()
     });
 });
 
 test.cb('.whois() return domain information', t => {
     const domain = 'example.com',
         options = {
+            recordType: 'domain',
             server: 'whois.verisign-grs.com',
             port: 43
         },
@@ -199,7 +207,7 @@ test.cb('.whois() return domain information', t => {
             t.end();
         };
 
-    domainInfo.whois(domain, options, callback);
+    return domainInfo.whois(domain, options, callback);
 });
 
 test('.whois() throw error when supply invalid arguents', t => {
