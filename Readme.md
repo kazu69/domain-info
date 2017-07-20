@@ -111,6 +111,18 @@ domain.punycode('xn--wgv71a119e.jp');
 // => 日本語.jp
 ```
 
+### whois(domain, [options, callback])
+
+Whois
+
+```js
+const domain = require('domain-info');
+domain.whois('a.ns.apple.com', (error, data) => {
+    console.log(data);
+});
+
+```
+
 ## Related
 
 [domain-info-cli](https://www.npmjs.com/package/domain-info-cli)
