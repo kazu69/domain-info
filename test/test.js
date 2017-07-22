@@ -38,7 +38,7 @@ test.cb('.groper() return domain resource record.', t => {
         },
         types = ['A', 'NS', 'MX'],
         domain = 'example.com',
-        timeout = 3000;
+        timeout = 10000;
 
     const options = {
         server: server,
@@ -49,16 +49,10 @@ test.cb('.groper() return domain resource record.', t => {
         var record = data.A.find(elem => {
             if(elem.address) return elem;
         });
+
         t.is(record.address, '93.184.216.34');
-
-        var record = data.MX;
-        t.is(record.length, 0);
-
-        var ns = data.NS.find(elem => {
-            if(elem.data) return elem;
-        });
-
-        t.true(ns.data.indexOf('iana-servers.net') !== -1);
+        t.is(data.MX.length, 0);
+        t.true(data.NS[0].data.indexOf('iana-servers.net') !== -1);
         t.is(error, null);
         t.end();
     }
@@ -74,7 +68,7 @@ test.cb('.groper() types has ANY returns all types', t => {
         },
         types = ['ANY', 'NS', 'MX'],
         domain = 'example.com',
-        timeout = 5000;
+        timeout = 10000;
 
     const options = {
         server: server,
