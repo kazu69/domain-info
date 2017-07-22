@@ -5,10 +5,8 @@ node_js:
   - '5'
   - '4'
 install:
-  - npm install -g yarn
-  - yarn generate-lock-entry
-  - yarn install
-  - yarn check --integrity
+  - npm install -g npm
+  - npm install
 cache:
   yarn: true
   directories:

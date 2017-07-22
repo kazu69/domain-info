@@ -1,6 +1,6 @@
 {
   "name": "domain-info",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "keywords": [
     "domain",
     "dns",
@@ -15,6 +15,7 @@
   "repository": "kazu69/domain-info",
   "homepage": "https://github.com/kazu69/domain-info",
   "dependencies": {
+    "array-includes": "^3.0.3",
     "async": "^2.1.5",
     "es6-promise": "^4.0.5",
     "native-dns": "^0.7.0",
