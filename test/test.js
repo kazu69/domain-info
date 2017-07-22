@@ -46,6 +46,7 @@ test.cb('.groper() return domain resource record.', t => {
     }
 
     const callback = (error, data) => {
+        setTimeout(t.end(), 10000);
         var record = data.A.find(elem => {
             if(elem.address) return elem;
         });
@@ -76,6 +77,7 @@ test.cb('.groper() types has ANY returns all types', t => {
     }
 
     const callback = (error, data) => {
+        setTimeout(t.end(), 10000);
         t.true(!!data.A);
         t.true(!!data.AAAA);
         t.true(!!data.NS);
