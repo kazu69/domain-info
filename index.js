@@ -6,7 +6,8 @@ const dns = require('native-dns'),
       tldjs = require('tldjs'),
       punycode = require('punycode'),
       async = require('async'),
-      objectAssign = require('object-assign');
+      objectAssign = require('object-assign'),
+      includes = require('array-includes');
 
 const dnsTypes = [
   'A',
@@ -319,7 +320,7 @@ module.exports.whois = (domain, opts, cb) => {
     }
 
 
-    if (opts.recordType && ['domain', 'nameserver', 'registrar'].includes(opts.recordType)) {
+    if (opts.recordType && includes(['domain', 'nameserver', 'registrar'], 'opts.recordType')) {
         recordType = opts.recordType;
     }
 
