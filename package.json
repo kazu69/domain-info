@@ -24,13 +24,25 @@
     "tldjs": "^1.6.2"
   },
   "devDependencies": {
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-transform-typescript": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-typescript": "^7.0.0",
     "ava": "git://github.com/sindresorhus/ava.git",
     "eslint": "^3.16.1",
-    "nyc": "^10.1.2"
+    "nyc": "^10.1.2",
+    "typescript": "^3.0.3"
   },
   "scripts": {
     "lint": "eslint **/*.js",
-    "test": "nyc ava test/*.js"
+    "test": "nyc ava test/*.js",
+    "type-check": "tsc --noEmit",
+    "build-types": "tsc --emitDeclarationOnly",
+    "build-js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
+    "build": "npm run build-types && npm run build-js"
   },
   "author": "kazu69",
   "license": "MIT"

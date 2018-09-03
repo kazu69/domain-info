@@ -7,3 +7,4 @@ example.js
 .git
 .gitignore
 coverage
+src
