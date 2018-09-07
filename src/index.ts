@@ -1,48 +1,48 @@
-import * as dns from 'native-dns';
-import net from 'net';
-import puny from 'punycode';
-import tldjs from 'tldjs';
+import * as dns from 'native-dns'
+import net from 'net'
+import puny from 'punycode'
+import tldjs from 'tldjs'
 
-const topLevelWhoisServerDomai = 'whois-servers.net';
+const topLevelWhoisServerDomai = 'whois-servers.net'
 
-type callbackFunction = (err: Error | null | undefined, data: any) => any;
+type callbackFunction = (err: Error | null | undefined, data: any) => any
 
 interface IwhoisServer {
-    recordType?: string;
-    server?: string;
-    port?: number;
+    recordType?: string
+    server?: string
+    port?: number
 }
 
 interface IdnsServer {
-    address: string;
-    port: number;
-    type: string;
+    address: string
+    port: number
+    type: string
 }
 
 interface IdnsResponse {
-    [type: string]: IdnsAnswer;
+    [type: string]: IdnsAnswer
 }
 
 interface IdnsRequestParams {
-    question?: IdnsQuestionResponse;
-    server?: IdnsServer;
-    timeout?: number;
-    cache?: boolean;
+    question?: IdnsQuestionResponse
+    server?: IdnsServer
+    timeout?: number
+    cache?: boolean
 }
 
 interface IdnsQuestionResponse {
-    name?: string;
-    type: string;
-    class: string;
+    name?: string
+    type: string
+    class: string
 }
 
 interface IdnsAnswer {
-    name: string;
-    type: number;
-    class: number;
-    ttl: number;
-    address?: string;
-    data?: string | string[];
+    name: string
+    type: number
+    class: number
+    ttl: number
+    address?: string
+    data?: string | string[]
 }
 
 const dnsTypes: string[] = [
@@ -57,15 +57,15 @@ const dnsTypes: string[] = [
     'SRV',
     'SOA',
     'TLSA',
-];
+]
 
-const ipMatcher: RegExp = /^(?:(?:2[0-4]\d|25[0-5]|1\d{2}|[1-9]?\d)\.){3}(?:2[0-4]\d|25[0-5]|1\d{2}|[1-9]?\d)$/;
+const ipMatcher: RegExp = /^(?:(?:2[0-4]\d|25[0-5]|1\d{2}|[1-9]?\d)\.){3}(?:2[0-4]\d|25[0-5]|1\d{2}|[1-9]?\d)$/
 const defaultDnsServer: IdnsServer = {
     address: '1.1.1.1',
     port: 53,
     type: 'tcp',
-};
-const defaultTimeout = 3000;
+}
+const defaultTimeout = 3000
 
 /**
  * node-dns wrapper method.
@@ -81,37 +81,37 @@ const defaultTimeout = 3000;
  * @returns {Promise}
  */
 function requestDns(domain: string, types?: string[], option?: IdnsServer, timeout?: number): Promise<any> {
-    const promises: Array<Promise<any>> = [];
+    const promises: Array<Promise<any>> = []
 
-    let recordTypes: string[] = [];
+    let recordTypes: string[] = []
 
     if (!types || types.length === 0) {
-        recordTypes = ['A'];
+        recordTypes = ['A']
     } else {
-        recordTypes = types;
+        recordTypes = types
     }
 
     recordTypes.map((type) => {
-        promises.push(ajaxRequest(domain, type, option, timeout));
-    });
+        promises.push(ajaxRequest(domain, type, option, timeout))
+    })
 
     return new Promise((resolve, reject) => {
         Promise
             .all(promises)
             .then((values) => {
                 const response: {
-                    [x: string]: IdnsAnswer[];
-                } = {};
+                    [x: string]: IdnsAnswer[],
+                } = {}
 
                 values.map((obj) => {
-                    Object.keys(obj).map((k) => { response[k] = obj[k]; });
-                });
-                resolve(response);
+                    Object.keys(obj).map((k) => { response[k] = obj[k] })
+                })
+                resolve(response)
             })
             .catch((err) => {
-                reject(err);
-            });
-    });
+                reject(err)
+            })
+    })
 }
 
 /**
@@ -125,44 +125,44 @@ function requestDns(domain: string, types?: string[], option?: IdnsServer, timeo
  * @returns {Promise}
  */
 function ajaxRequest(domain: string, type: string, dnsServer?: IdnsServer, timeout: number = defaultTimeout): Promise<any> {
-    const server: IdnsServer = defaultDnsServer;
+    const server: IdnsServer = defaultDnsServer
 
     return new Promise((resolve, reject) => {
         const questionOpts = {
             name: domain,
             type,
-        };
+        }
 
         const requestOption: IdnsRequestParams = {
             cache: false,
             question: dns.Question(questionOpts),
             server: Object.assign(server, dnsServer),
             timeout,
-        };
+        }
 
-        if (timeout) { requestOption.timeout = timeout; }
-        const request = dns.Request(requestOption);
+        if (timeout) { requestOption.timeout = timeout }
+        const request = dns.Request(requestOption)
 
         request.on('timeout', () => {
-            reject(new Error('DNS request timed out'));
-        });
+            reject(new Error('DNS request timed out'))
+        })
 
         request.on('cancelled', () => {
-            reject(new Error('DNS request cancelled'));
-        });
+            reject(new Error('DNS request cancelled'))
+        })
 
         request.on('error', (error: Error) => {
-            reject(error);
-        });
+            reject(error)
+        })
 
         request.on('message', (_: Error, response: any) => {
             resolve({
                 [type]: response.answer,
-            });
-        });
+            })
+        })
 
-        request.send();
-    });
+        request.send()
+    })
 }
 
 /**
@@ -174,33 +174,33 @@ function ajaxRequest(domain: string, type: string, dnsServer?: IdnsServer, timeo
 
 function validateDnsType(types?: string | string[]): string[] {
     if (!types || (types !== 'ANY' && typeof types.length !== 'number')) {
-        throw new Error('Expected a `types is Array`');
+        throw new Error('Expected a `types is Array`')
     }
 
-    let recordTypes: string[];
-    const validTypes: string[] = [];
+    let recordTypes: string[]
+    const validTypes: string[] = []
 
     if (types === 'ANY' || types.includes('ANY')) {
-        recordTypes = dnsTypes;
+        recordTypes = dnsTypes
     } else {
         if (typeof types === 'string') {
-            recordTypes = [types];
+            recordTypes = [types]
         } else {
-            recordTypes = types;
+            recordTypes = types
         }
     }
 
     recordTypes.forEach((type) => {
         const matched = dnsTypes.find( elem => {
-            return type.toUpperCase() === elem;
-        });
+            return type.toUpperCase() === elem
+        })
 
         if (typeof matched === 'string') {
-            validTypes.push(matched);
+            validTypes.push(matched)
         }
-    });
+    })
 
-    return validTypes;
+    return validTypes
 }
 
 /**
@@ -213,28 +213,28 @@ function validateDnsType(types?: string | string[]): string[] {
  */
 function requestWhois(domain: string, options?: any): Promise<any> {
     let whoisServer: string,
-        port: number;
+        port: number
 
     return new Promise((resolve, reject) => {
         const func = (domain: string, whoisServer: string, port: number) => {
             getWhoisDomain(domain, whoisServer, port)
-                .then((data) => { resolve(data); })
-                .catch((error) => { reject(error); });
-        };
+                .then((data) => { resolve(data) })
+                .catch((error) => { reject(error) })
+        }
 
         if (options && options.server) {
-            whoisServer = options.server;
-            if (options.port) { port = options.port; }
-            func.call(null, domain, whoisServer, port);
+            whoisServer = options.server
+            if (options.port) { port = options.port }
+            func.call(null, domain, whoisServer, port)
         } else {
             getTopLevelWhoisServer(domain).then((whoisServers) => {
-                whoisServer = whoisServers[0];
-                func.call(null, domain, whoisServer, port);
+                whoisServer = whoisServers[0]
+                func.call(null, domain, whoisServer, port)
             }).catch((error) => {
-                reject(error);
-            });
+                reject(error)
+            })
         }
-    });
+    })
 }
 
 /**
@@ -247,17 +247,17 @@ function getTopLevelWhoisServer(domain: string): Promise<any> {
     const tmp = domain.split('.'),
         tld = tmp[tmp.length - 1],
         cname = `${tld}.${topLevelWhoisServerDomai}`,
-        messege = { not_found: 'Whois Server `NOT FOUND`' };
+        messege = { not_found: 'Whois Server `NOT FOUND`' }
 
     return new Promise((resolve, reject) => {
         dns.resolveCname(cname, (error: Error, servers: any) => {
             if (servers && servers.length > 0) {
-                resolve(servers);
+                resolve(servers)
             } else {
-                !error ? reject(messege.not_found) : reject(error);
+                !error ? reject(messege.not_found) : reject(error)
             }
-        });
-    });
+        })
+    })
 }
 
 /**
@@ -268,27 +268,27 @@ function getTopLevelWhoisServer(domain: string): Promise<any> {
  * @return {Promise}
  */
 function getWhoisDomain(domain: string, server: string, port = 43): Promise<any> {
-    if (!domain) { throw new Error('`domain` is required'); }
-    if (!server) { throw new Error('`server` is required'); }
+    if (!domain) { throw new Error('`domain` is required') }
+    if (!server) { throw new Error('`server` is required') }
 
-    const socket = new net.Socket();
-    const encoding = 'utf8';
+    const socket = new net.Socket()
+    const encoding = 'utf8'
 
     return new Promise((resolve, reject) => {
-        socket.setEncoding(encoding);
+        socket.setEncoding(encoding)
 
         socket.connect(port, server, () => {
-            socket.end(domain + '\r\n', encoding);
-        });
+            socket.end(domain + '\r\n', encoding)
+        })
 
         socket.on('data', (data) => {
-            resolve(data);
-        });
+            resolve(data)
+        })
 
         socket.on('error', (error) => {
-            reject(error);
-        });
-    });
+            reject(error)
+        })
+    })
 }
 
 /**
@@ -300,18 +300,18 @@ function getWhoisDomain(domain: string, server: string, port = 43): Promise<any>
  */
 function reverseDomain(ip: string): Promise<string> {
     if (!ipMatcher.test(ip)) {
-        throw new Error('IP is not valid');
+        throw new Error('IP is not valid')
     }
 
     return new Promise((resolve, reject) => {
         dns.reverse(ip, (error: Error, hostname: string) => {
             if (reverse) {
-                resolve(hostname);
+                resolve(hostname)
             } else {
-                reject(error);
+                reject(error)
             }
-        });
-    });
+        })
+    })
 }
 
 /**
@@ -321,7 +321,7 @@ function reverseDomain(ip: string): Promise<string> {
  * @return {String}
  */
 function decodePuny(ascii: string): string {
-    return puny.toUnicode(ascii);
+    return puny.toUnicode(ascii)
 }
 
 /**
@@ -331,106 +331,106 @@ function decodePuny(ascii: string): string {
  * @return {String}
  */
 function encodePuny(unicode: string): string {
-    return puny.toASCII(unicode);
+    return puny.toASCII(unicode)
 }
 
 export const groper = (domain: string, types?: any, options?: IdnsRequestParams, cb?: callbackFunction): Promise<any> | void => {
-    if (typeof domain !== 'string') { throw new Error('Expected a `domain`'); }
+    if (typeof domain !== 'string') { throw new Error('Expected a `domain`') }
 
     const defaultOptions: IdnsRequestParams = {
         server: defaultDnsServer,
         timeout: defaultTimeout,
-    };
+    }
 
-    let callback: callbackFunction;
-    let requestOptions: IdnsRequestParams = defaultOptions;
+    let callback: callbackFunction
+    let requestOptions: IdnsRequestParams = defaultOptions
 
     if (typeof types === 'function') {
-        callback = types;
+        callback = types
     } else if (typeof options === 'function') {
-        callback = options;
-        requestOptions = Object.assign(defaultOptions, cb);
+        callback = options
+        requestOptions = Object.assign(defaultOptions, cb)
     } else if (cb) {
-        requestOptions = Object.assign(defaultOptions, options);
-        callback = cb;
+        requestOptions = Object.assign(defaultOptions, options)
+        callback = cb
     }
 
-    const domainName = encodePuny(domain);
-    let type, server, timeout, resourceTypes = ['ANY'];
+    const domainName = encodePuny(domain)
+    let type, server, timeout, resourceTypes = ['ANY']
 
-    if (typeof types === 'string') { resourceTypes = new Array(types); }
-    if (Array.isArray(types)) { resourceTypes = types; }
-    if (resourceTypes.includes('ANY')) { resourceTypes = ['ANY']; }
+    if (typeof types === 'string') { resourceTypes = new Array(types) }
+    if (Array.isArray(types)) { resourceTypes = types }
+    if (resourceTypes.includes('ANY')) { resourceTypes = ['ANY'] }
 
-    type = validateDnsType(resourceTypes);
+    type = validateDnsType(resourceTypes)
 
     if (type.length === 0) {
-        throw new Error('Valid No `DNS TYPE` exitst');
+        throw new Error('Valid No `DNS TYPE` exitst')
     }
 
-    if (requestOptions.server) { server = requestOptions.server; }
-    if (requestOptions.timeout) { timeout = requestOptions.timeout; }
-    const promise = requestDns(domainName, type, server, timeout);
+    if (requestOptions.server) { server = requestOptions.server }
+    if (requestOptions.timeout) { timeout = requestOptions.timeout }
+    const promise = requestDns(domainName, type, server, timeout)
 
     if (callback && typeof callback === 'function') {
         promise
             .then((data) => callback(null, data))
-            .catch((error) => callback(error, null));
+            .catch((error) => callback(error, null))
     } else {
-        return promise;
+        return promise
     }
-};
+}
 
 export const reverse = (ip: string, cb: callbackFunction): Promise<string> | void => {
     if (typeof ip !== 'string') {
-        throw new Error('Expected a `ip address`');
+        throw new Error('Expected a `ip address`')
     }
 
-    const promise = reverseDomain(ip);
+    const promise = reverseDomain(ip)
 
     if (cb && typeof cb === 'function') {
         promise
             .then((data) => cb(null, data))
-            .catch((error) => cb(error, null));
+            .catch((error) => cb(error, null))
     } else {
-        return promise;
+        return promise
     }
-};
+}
 
 export const whois = (domain: string, opts?: IwhoisServer, cb?: callbackFunction): Promise<any> | void => {
     if (typeof domain !== 'string') {
-        throw new Error('Expected a `domain name`');
+        throw new Error('Expected a `domain name`')
     }
 
-    let callback: callbackFunction;
+    let callback: callbackFunction
 
     if (typeof opts === 'function') {
-        callback = opts;
+        callback = opts
     } else {
-        callback = cb;
+        callback = cb
     }
 
     if (tldjs.tldExists(domain) === false) {
-        throw new Error('Invalid a `domain name`');
+        throw new Error('Invalid a `domain name`')
     }
 
     const encodedDomain = `${encodePuny(domain)}`,
-        promise = requestWhois(encodedDomain, opts);
+        promise = requestWhois(encodedDomain, opts)
 
     if (callback && typeof callback === 'function') {
         promise
             .then((data) => callback(null, data))
-            .catch((error) => callback(error, null));
+            .catch((error) => callback(error, null))
     } else {
-        return promise;
+        return promise
     }
-};
+}
 
 export const punycode = (ascii_or_unicode: string): string => {
-    const type = ascii_or_unicode.match(/^xn--/) ? 'decode' : 'encode';
+    const type = ascii_or_unicode.match(/^xn--/) ? 'decode' : 'encode'
     if (type === 'decode') {
-        return decodePuny(ascii_or_unicode);
+        return decodePuny(ascii_or_unicode)
     } else {
-        return encodePuny(ascii_or_unicode);
+        return encodePuny(ascii_or_unicode)
     }
-};
+}

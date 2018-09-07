@@ -24,4 +24,3 @@ export declare const groper: (domain: string, types?: any, options?: IdnsRequest
 export declare const reverse: (ip: string, cb: callbackFunction) => void | Promise<string>;
 export declare const whois: (domain: string, opts?: IwhoisServer, cb?: callbackFunction) => void | Promise<any>;
 export declare const punycode: (ascii_or_unicode: string) => string;
-export {};
