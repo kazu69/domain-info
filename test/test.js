@@ -1,7 +1,7 @@
 'use strict';
 
 const test = require('ava');
-const domainInfo = require('../index');
+const domainInfo = require('../lib/index');
 
 test.cb('.groper() return promise when without callback function.', t => {
     const domain = 'example.com',
@@ -46,9 +46,13 @@ test.cb('.groper() return domain resource record.', t => {
     }
 
     const callback = (error, data) => {
-        setTimeout(t.end(), 10000);
-        var record = data.A.find(elem => {
-            if(elem.address) return elem;
+        if (!data) return;
+        setTimeout(() => { t.end() }, 10000);
+        var record;
+        data.map(datum => {
+            record = datum.A.find(elem => {
+                if(elem.address) return elem;
+            });
         });
 
         t.is(record.address, '93.184.216.34');
@@ -57,7 +61,6 @@ test.cb('.groper() return domain resource record.', t => {
         t.is(error, null);
         t.end();
     }
-
     return domainInfo.groper(domain, types, options, callback);
 });
 
@@ -77,7 +80,8 @@ test.cb('.groper() types has ANY returns all types', t => {
     }
 
     const callback = (error, data) => {
-        setTimeout(t.end(), 10000);
+        if (!data) { return }
+        setTimeout(() => { t.end() }, 10000);
         t.true(!!data.A);
         t.true(!!data.AAAA);
         t.true(!!data.NS);
@@ -89,6 +93,7 @@ test.cb('.groper() types has ANY returns all types', t => {
         t.true(!!data.SRV);
         t.true(!!data.SOA);
         t.true(!!data.TLSA);
+        t.is(error, null);
         t.end();
     }
 
@@ -208,7 +213,7 @@ test.cb('.whois() return domain information', t => {
 
 test('.whois() throw error when supply invalid arguents', t => {
     let domain = null;
-    t.throws(() => { domainInfo.whois(domain) }, 'Expected a `domain`');
+    t.throws(() => { domainInfo.whois(domain) }, 'Expected a `domain name`');
 
     domain = 'foobar.dummy';
     t.throws(() => { domainInfo.whois(domain) }, 'Invalid a `domain name`');
