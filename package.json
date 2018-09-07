@@ -30,13 +30,15 @@
     "@babel/plugin-transform-typescript": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-typescript": "^7.0.0",
+    "@netflix/tslint-config": "^1.0.1",
     "ava": "git://github.com/sindresorhus/ava.git",
-    "eslint": "^3.16.1",
-    "nyc": "^10.1.2",
+    "nyc": "^13.1.0",
+    "tslint": "^5.11.0",
     "typescript": "^3.0.3"
   },
   "scripts": {
-    "lint": "eslint **/*.js",
+    "lint": "tslint -c tslint.json src/**/*.ts",
+    "fix-lint": "tslint --fix -c tslint.json src/**/*.ts",
     "test": "nyc ava test/*.js",
     "type-check": "tsc --noEmit",
     "build-types": "tsc --emitDeclarationOnly",
