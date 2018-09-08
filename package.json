@@ -12,25 +12,42 @@
   ],
   "description": "Simple domain information tool",
   "main": "index.js",
+  "types": "lib/domain-info.d.ts",
   "repository": "kazu69/domain-info",
   "homepage": "https://github.com/kazu69/domain-info",
   "dependencies": {
-    "array-includes": "^3.0.3",
-    "async": "^2.1.5",
+    "@types/node": "^10.9.4",
+    "@types/tldjs": "^1.7.1",
     "es6-promise": "^4.0.5",
     "native-dns": "^0.7.0",
-    "net": "^1.0.2",
-    "object-assign": "^4.0.1",
     "tldjs": "^1.6.2"
   },
   "devDependencies": {
-    "ava": "git://github.com/sindresorhus/ava.git",
-    "eslint": "^3.16.1",
-    "nyc": "^10.1.2"
+    "@babel/cli": "^7.0.0",
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-typescript": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-typescript": "^7.0.0",
+    "@netflix/tslint-config": "^1.0.1",
+    "ava": "^0.25.0",
+    "nyc": "^13.1.0",
+    "tslint": "^5.11.0",
+    "typescript": "^3.0.3"
   },
   "scripts": {
-    "lint": "eslint **/*.js",
-    "test": "nyc ava test/*.js"
+    "lint": "tslint -c tslint.json src/**/*.ts",
+    "fix-lint": "tslint --fix -c tslint.json src/**/*.ts",
+    "test": "nyc ava lib/*.test.js",
+    "type-check": "tsc --noEmit",
+    "build-types": "tsc --emitDeclarationOnly",
+    "build-js": "babel src --out-dir lib --extensions \".ts\" --source-maps inline",
+    "build": "npm run build-types && npm run build-js",
+    "clean": "rm -rf lib",
+    "prebuild": "npm run clean",
+    "pretest": "npm run build",
+    "posttest": "rm -rf lib/*.test.js && rm -rf lib/*.test.d.ts"
   },
   "author": "kazu69",
   "license": "MIT"

@@ -1,7 +1,7 @@
 'use strict';
 
-const test = require('ava');
-const domainInfo = require('../index');
+import test from 'ava'
+import * as domainInfo from './domain-info'
 
 test.cb('.groper() return promise when without callback function.', t => {
     const domain = 'example.com',
@@ -9,21 +9,23 @@ test.cb('.groper() return promise when without callback function.', t => {
         server = {
             address: '8.8.8.8',
             port: 53,
-            type: 'tcp'
+            type: 'tcp',
         },
         timeout = 3000,
         options = {
             server: server,
-            timeout: timeout
+            timeout: timeout,
         };
 
     const promise = domainInfo.groper(domain, type, options);
     promise.then(data => {
-        var record = data.A.find(elem => {
-            if(elem.address) return elem;
+        const record = data.A.find(elem => {
+            if(elem.address) {
+                return elem
+            }
         });
-         t.is(record.address, '93.184.216.34');
-         t.end();
+        t.is(record.address, '93.184.216.34');
+        t.end();
     }).catch( () => {
         t.pass();
         t.end();
@@ -42,13 +44,21 @@ test.cb('.groper() return domain resource record.', t => {
 
     const options = {
         server: server,
-        timeout: timeout
+        timeout: timeout,
     }
 
     const callback = (error, data) => {
-        setTimeout(t.end(), 10000);
-        var record = data.A.find(elem => {
-            if(elem.address) return elem;
+        if (!data) {
+            return
+        }
+        setTimeout(() => { t.end() }, 10000);
+        var record;
+        data.map(datum => {
+            record = datum.A.find(elem => {
+                if (elem.address) {
+                    return elem
+                }
+            });
         });
 
         t.is(record.address, '93.184.216.34');
@@ -57,7 +67,6 @@ test.cb('.groper() return domain resource record.', t => {
         t.is(error, null);
         t.end();
     }
-
     return domainInfo.groper(domain, types, options, callback);
 });
 
@@ -65,7 +74,7 @@ test.cb('.groper() types has ANY returns all types', t => {
     const server = {
             address: '8.8.8.8',
             port: 53,
-            type: 'tcp'
+            type: 'tcp',
         },
         types = ['ANY', 'NS', 'MX'],
         domain = 'example.com',
@@ -73,11 +82,12 @@ test.cb('.groper() types has ANY returns all types', t => {
 
     const options = {
         server: server,
-        timeout: timeout
+        timeout: timeout,
     }
 
     const callback = (error, data) => {
-        setTimeout(t.end(), 10000);
+        if (!data) { return }
+        setTimeout(() => { t.end() }, 10000);
         t.true(!!data.A);
         t.true(!!data.AAAA);
         t.true(!!data.NS);
@@ -89,6 +99,7 @@ test.cb('.groper() types has ANY returns all types', t => {
         t.true(!!data.SRV);
         t.true(!!data.SOA);
         t.true(!!data.TLSA);
+        t.is(error, null);
         t.end();
     }
 
@@ -101,7 +112,9 @@ test.cb('.groper() enable encode punycode domain', t => {
 
     const callback = (error, data) => {
         var record = data.A.find(elem => {
-            if(elem) return elem;
+            if (elem) {
+                return elem
+            }
         });
         t.is(record.name, 'xn--wgv71a119e.jp');
         t.is(record.address, '117.104.133.167');
@@ -124,7 +137,7 @@ test.cb('.groper() return error with message.', t => {
 
     const options = {
         server: server,
-        timeout: timeout
+        timeout: timeout,
     }
 
     const callback = (error, data) => {
@@ -138,7 +151,7 @@ test.cb('.groper() return error with message.', t => {
 });
 
 test('.groper() throw error when supply invalid arguents', t => {
-    let domain = null,
+    const domain = null,
         options = {},
         callback = (error, data) => {};
 
@@ -193,7 +206,7 @@ test.cb('.whois() return domain information', t => {
         options = {
             recordType: 'domain',
             server: 'whois.verisign-grs.com',
-            port: 43
+            port: 43,
         },
         callback = (error, data) => {
             t.not(data, null);
@@ -208,7 +221,7 @@ test.cb('.whois() return domain information', t => {
 
 test('.whois() throw error when supply invalid arguents', t => {
     let domain = null;
-    t.throws(() => { domainInfo.whois(domain) }, 'Expected a `domain`');
+    t.throws(() => { domainInfo.whois(domain) }, 'Expected a `domain name`');
 
     domain = 'foobar.dummy';
     t.throws(() => { domainInfo.whois(domain) }, 'Invalid a `domain name`');

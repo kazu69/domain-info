@@ -1,9 +1,15 @@
 node_modules/
 .nyc_output/
+.vscode/
 .github/
-.nyc_output
 example.js
 .travis.yml
 .git
 .gitignore
 coverage
+src
+.npmignore
+test/
+.babelrc
+tsconfig.json
+tslint.json

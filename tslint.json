@@ -1,0 +1,11 @@
+{
+    "defaultSeverity": "error",
+    "extends": [
+        "@netflix/tslint-config"
+    ],
+    "jsRules": {},
+    "rules": {
+        "max-line-length": [true, 140]
+    },
+    "rulesDirectory": []
+}

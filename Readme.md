@@ -120,7 +120,6 @@ const domain = require('domain-info');
 domain.whois('a.ns.apple.com', (error, data) => {
     console.log(data);
 });
-
 ```
 
 ## Related
