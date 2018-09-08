@@ -45,6 +45,10 @@ interface IdnsAnswer {
     data?: string | string[]
 }
 
+interface groperResult {
+    [type: string]: IdnsQuestionResponse[]
+}
+
 const dnsTypes: string[] = [
     'A',
     'AAAA',
@@ -334,7 +338,7 @@ function encodePuny(unicode: string): string {
     return puny.toASCII(unicode)
 }
 
-export const groper = (domain: string, types?: any, options?: IdnsRequestParams, cb?: callbackFunction): Promise<any> | void => {
+export const groper = (domain: string, types?: any, options?: IdnsRequestParams, cb?: callbackFunction): Promise<groperResult> | void => {
     if (typeof domain !== 'string') { throw new Error('Expected a `domain`') }
 
     const defaultOptions: IdnsRequestParams = {
@@ -397,7 +401,7 @@ export const reverse = (ip: string, cb: callbackFunction): Promise<string> | voi
     }
 }
 
-export const whois = (domain: string, opts?: IwhoisServer, cb?: callbackFunction): Promise<any> | void => {
+export const whois = (domain: string, opts?: IwhoisServer, cb?: callbackFunction): Promise<string> | void => {
     if (typeof domain !== 'string') {
         throw new Error('Expected a `domain name`')
     }
