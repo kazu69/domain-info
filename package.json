@@ -11,8 +11,8 @@
     "promise"
   ],
   "description": "Simple domain information tool",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
+  "main": "index.js",
+  "types": "lib/domain-info.d.ts",
   "repository": "kazu69/domain-info",
   "homepage": "https://github.com/kazu69/domain-info",
   "dependencies": {
@@ -39,11 +39,15 @@
   "scripts": {
     "lint": "tslint -c tslint.json src/**/*.ts",
     "fix-lint": "tslint --fix -c tslint.json src/**/*.ts",
-    "test": "nyc ava test/*.js",
+    "test": "nyc ava lib/*.test.js",
     "type-check": "tsc --noEmit",
     "build-types": "tsc --emitDeclarationOnly",
-    "build-js": "babel src --out-dir lib --extensions \".ts,.tsx\" --source-maps inline",
-    "build": "npm run build-types && npm run build-js"
+    "build-js": "babel src --out-dir lib --extensions \".ts\" --source-maps inline",
+    "build": "npm run build-types && npm run build-js",
+    "clean": "rm -rf lib",
+    "prebuild": "npm run clean",
+    "pretest": "npm run build",
+    "posttest": "rm -rf lib/*.test.js && rm -rf lib/*.test.d.ts"
   },
   "author": "kazu69",
   "license": "MIT"

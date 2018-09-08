@@ -20,10 +20,8 @@ interface IdnsQuestionResponse {
     type: string;
     class: string;
 }
-interface groperResult {
-    [type: string]: IdnsQuestionResponse[];
-}
-export declare const groper: (domain: string, types?: any, options?: IdnsRequestParams, cb?: callbackFunction) => void | Promise<groperResult>;
-export declare const reverse: (ip: string, cb: callbackFunction) => void | Promise<string>;
-export declare const whois: (domain: string, opts?: IwhoisServer, cb?: callbackFunction) => void | Promise<string>;
+export declare const groper: (domain: string, types?: string | string[] | IdnsRequestParams | callbackFunction, options?: IdnsRequestParams | callbackFunction, cb?: callbackFunction) => any;
+export declare const reverse: (ip: string, cb?: callbackFunction) => any;
+export declare const whois: (domain: string, opts?: IwhoisServer | callbackFunction, cb?: callbackFunction) => any;
 export declare const punycode: (ascii_or_unicode: string) => string;
+export {};

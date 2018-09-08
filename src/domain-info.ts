@@ -19,10 +19,6 @@ interface IdnsServer {
     type: string
 }
 
-interface IdnsResponse {
-    [type: string]: IdnsAnswer
-}
-
 interface IdnsRequestParams {
     question?: IdnsQuestionResponse
     server?: IdnsServer
@@ -338,7 +334,7 @@ function encodePuny(unicode: string): string {
     return puny.toASCII(unicode)
 }
 
-export const groper = (domain: string, types?: any, options?: IdnsRequestParams, cb?: callbackFunction): Promise<groperResult> | void => {
+export const groper = (domain: string, types?: string | string[] | IdnsRequestParams | callbackFunction, options?: IdnsRequestParams | callbackFunction, cb?: callbackFunction): Promise<groperResult> | any => {
     if (typeof domain !== 'string') { throw new Error('Expected a `domain`') }
 
     const defaultOptions: IdnsRequestParams = {
@@ -385,7 +381,7 @@ export const groper = (domain: string, types?: any, options?: IdnsRequestParams,
     }
 }
 
-export const reverse = (ip: string, cb: callbackFunction): Promise<string> | void => {
+export const reverse = (ip: string, cb?: callbackFunction): Promise<string> | any => {
     if (typeof ip !== 'string') {
         throw new Error('Expected a `ip address`')
     }
@@ -401,7 +397,7 @@ export const reverse = (ip: string, cb: callbackFunction): Promise<string> | voi
     }
 }
 
-export const whois = (domain: string, opts?: IwhoisServer, cb?: callbackFunction): Promise<string> | void => {
+export const whois = (domain: string, opts?: IwhoisServer | callbackFunction, cb?: callbackFunction): Promise<string> | any => {
     if (typeof domain !== 'string') {
         throw new Error('Expected a `domain name`')
     }
