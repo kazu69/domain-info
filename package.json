@@ -1,6 +1,6 @@
 {
   "name": "domain-info",
-  "version": "0.0.14",
+  "version": "0.1.0",
   "keywords": [
     "domain",
     "dns",
@@ -42,7 +42,7 @@
     "test": "nyc ava lib/*.test.js",
     "type-check": "tsc --noEmit",
     "build-types": "tsc --emitDeclarationOnly",
-    "build-js": "babel src --out-dir lib --extensions \".ts\" --source-maps inline",
+    "build-js": "babel src --out-dir lib --extensions \".ts\"",
     "build": "npm run build-types && npm run build-js",
     "clean": "rm -rf lib",
     "prebuild": "npm run clean",
