@@ -27,7 +27,7 @@ interface IdnsRequestParams {
 }
 
 interface IdnsQuestionResponse {
-    name?: string
+    name: string
     type: string
     class: string
 }
