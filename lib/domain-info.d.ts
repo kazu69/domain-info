@@ -16,7 +16,7 @@ interface IdnsRequestParams {
     cache?: boolean;
 }
 interface IdnsQuestionResponse {
-    name?: string;
+    name: string;
     type: string;
     class: string;
 }
