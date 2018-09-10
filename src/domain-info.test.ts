@@ -150,13 +150,10 @@ test.cb('.groper() return error with message.', t => {
     return domainInfo.groper(domain, types, options, callback);
 });
 
-test('.groper() throw error when supply invalid arguents', t => {
-    const domain = null,
-        options = {},
-        callback = (error, data) => {};
-
-    t.throws(() => { domainInfo.groper(domain, callback) }, 'Expected a `domain`');
-});
+// test('.groper() throw error when supply invalid arguents', t => {
+//     const callback = () => {};
+//     t.throws(() => { domainInfo.groper(null, callback) }, 'Expected a `domain`');
+// });
 
 test.cb('.reverse() return promise when without callback function.', t => {
     const ip = '8.8.8.8',

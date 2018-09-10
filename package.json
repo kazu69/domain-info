@@ -1,6 +1,6 @@
 {
   "name": "domain-info",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "keywords": [
     "domain",
     "dns",
@@ -43,7 +43,7 @@
     "type-check": "tsc --noEmit",
     "build-types": "tsc --emitDeclarationOnly",
     "build-js": "babel src --out-dir lib --extensions \".ts\"",
-    "build": "npm run build-types && npm run build-js",
+    "build": "npm run build-types && npm run build-js && rm -rf lib/*.test.d.ts",
     "clean": "rm -rf lib",
     "prebuild": "npm run clean",
     "pretest": "npm run build",

@@ -277,6 +277,8 @@ function getWhoisDomain(domain: string, server: string, port = 43): Promise<any>
     return new Promise((resolve, reject) => {
         socket.setEncoding(encoding)
 
+        socket.setKeepAlive(true, 0)
+
         socket.connect(port, server, () => {
             socket.end(domain + '\r\n', encoding)
         })
@@ -335,7 +337,9 @@ function encodePuny(unicode: string): string {
 }
 
 export const groper = (domain: string, types?: string | string[] | IdnsRequestParams | callbackFunction, options?: IdnsRequestParams | callbackFunction, cb?: callbackFunction): Promise<groperResult> | any => {
-    if (typeof domain !== 'string') { throw new Error('Expected a `domain`') }
+    if (typeof domain !== 'string') { 
+        throw new Error('Expected a `domain`')
+    }
 
     const defaultOptions: IdnsRequestParams = {
         server: defaultDnsServer,
