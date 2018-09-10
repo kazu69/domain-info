@@ -43,7 +43,7 @@
     "type-check": "tsc --noEmit",
     "build-types": "tsc --emitDeclarationOnly",
     "build-js": "babel src --out-dir lib --extensions \".ts\"",
-    "build": "npm run build-types && npm run build-js && rm -rf lib/*.test.d.ts",
+    "build": "npm run build-types && npm run build-js && npm run posttest",
     "clean": "rm -rf lib",
     "prebuild": "npm run clean",
     "pretest": "npm run build",
