@@ -275,21 +275,31 @@ function getWhoisDomain(domain: string, server: string, port = 43): Promise<any>
     const encoding = 'utf8'
 
     return new Promise((resolve, reject) => {
+        const result: string[] = [];
+
         socket.setEncoding(encoding)
 
         socket.setKeepAlive(true, 0)
 
-        socket.connect(port, server, () => {
-            socket.end(domain + '\r\n', encoding)
-        })
+        socket.connect(port, server)
 
         socket.on('data', (data) => {
-            resolve(data)
+            result.push(data.toString())
         })
 
         socket.on('error', (error) => {
             reject(error)
         })
+
+        socket.on('timeout', error => {
+            reject(error)
+        })
+
+        socket.on('end', () => {
+            resolve(result.join(`\r\n`))
+        })
+
+        socket.end(`${domain}\r\n`, encoding)
     })
 }
 
